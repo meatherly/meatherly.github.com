@@ -1,11 +1,10 @@
 ---
 layout: post
-title: "Gemsets are dead. Start using Bundler"
-supporting_tagline: ""
-description: ""
-category: code
-tags: [rvm-gemsets, bundler, rvm]
+title: "Gemsets are dead. Start using Bundler."
+category: ruby
+tags: [rvm-gemsets, bundler, rvm, rails]
 ---
+{% include JB/setup %}
 
 Over the past year now at my job, we have been using RVM. We decided to go with it because we work on multiple projects with different ruby versions and the projects have different gem versions. Us being the noobs that we are, gemsets made sense logically to us. You don’t want to mix up your gem versions going from project to project right?
 
@@ -13,7 +12,7 @@ Well a year has past and I hate dealing with RVM gemsets. Having to make new .rv
 
 This frustration lead me to research if RVM gemsets are even worth the headache. I also remembered back in my Windows days, when I was playing with Rails, that I didn’t have RVM but I was able to use different gem versions on different projects. This lead me to this article by Steven Ball. My favorite part and pretty much the summary of the article is this:
 
- > If you’re already using bundler to manage the gems for all of your projects (and you should) then you can just stop dealing with gemsets and let bundler sort it all out for you.
+>If you’re already using bundler to manage the gems for all of your projects (and you should) then you can just stop dealing with gemsets and let bundler sort it all out for you.
 
 You should basically read the article if you have the time. Alright, moving on. What’s so cool about bundler is that it will save all the different versions of your gem once you pull them down with bundle install. Bundler even says this in their docs:
 

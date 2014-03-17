@@ -68,4 +68,18 @@ body {
 	border:1px solid #4C964D;
 	color:#FFF;
 }
-	
+
+/* index page ======================================================== */
+.posts {
+  padding: 20px 30px;
+  text-align: center;
+}
+
+.posts .post-date {
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+.posts .post-title a {
+  font-style: none;
+  font-size: 24px;
+}
