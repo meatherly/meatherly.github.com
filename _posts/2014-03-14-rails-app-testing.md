@@ -1,8 +1,8 @@
 ---
 layout: post
 title: "Rails App Testing"
-description: "Standards, Tips, and Performace for testing your Rails app"
-category: 
+description: "Standards, Tips, and Performance for testing your Rails app"
+category:
 tags: [rspec, rails, api]
 ---
 {% include JB/setup %}
@@ -19,12 +19,12 @@ This way you will know exactly what the serializer is returning and you can be c
 
 At minimum you should be testing the keys. That way you know what keys you’re returning with the api.
 
-You can write and test your response body in your controller tests or in your serializer tests. 
+You can write and test your response body in your controller tests or in your serializer tests.
 
 #####Examples
 
 If the documentation says that `GET /user/:id` will return:
- 
+
     {
        first_name: string,
        last_name: string
@@ -32,7 +32,7 @@ If the documentation says that `GET /user/:id` will return:
 Then you should at least have a test that does something along the lines of:
 
     describe '#GET user/:id' do
-       expected = { 
+       expected = {
           first_name: user.first_name,
           last_name: user.last_name,
        }.to_json
@@ -46,11 +46,11 @@ These should go in the `spec/serializers` folder.
 
     describe UserSerializer do  
       it "should return the right attributes for a user" do
-        serializer = UserSerializer.new User.new(id: 1, first_name: 'first', last_name: 'last')    
+        serializer = UserSerializer.new User.new(id: 1, first_name: 'first', last_name: 'last')
         expect(serializer.to_json).to eql('{"user":{"id":1,"first_name":"first", "last_name":"last"}}')  
       end
     end
-    
+
 The above can be harder to write and but it is more verbose. If you don't like that option you can write controller tests and use the .all? block to test the keys of the json.
 
 `api/users_controller_spec.rb`
@@ -58,17 +58,17 @@ The above can be harder to write and but it is more verbose. If you don't like t
     describe Api::UsersControllers do
       let!(:user){ Fabricate :user }
       before do
-        get api_users_path        
-      end        
+        get api_users_path
+      end
       it 'should have the correct attributes' do
         get :show, id: 1
         json = JSON.parse(response.body)  
-        expect{                 
+        expect{
           user.attributes.all? do |key|
-            json.has_key(key)                
-          end            
-        }.to be        
-      end    
+            json.has_key(key)
+          end
+        }.to be
+      end
     end
 
 The code above checks to make sure that all the keys for the model are represented in the response body. If you need to add more attributes you can alway just give the .all? block a hash with all the keys that should be in there. This will not only check if all your keys are there but will fail if you add or remove a key from your serializer.
@@ -87,12 +87,12 @@ These are easy test to write just because you're just checking the model validat
 
 #####Examples
 `models/user.rb`
-    
+
     class User < ActiveRecord::Base
       validates :first_name, :last_name, presence
     end
 
-You should always tests your models validation code. This way you know that you’re validations are working properly. 
+You should always tests your models validation code. This way you know that you’re validations are working properly.
 
 #Model tests
 
@@ -103,7 +103,7 @@ You should always tests your models validation code. This way you know that you�
    * Instance and class methods
 
 ###Model Validations
-You should always start with a valid fixture. 
+You should always start with a valid fixture.
 
 `user_fabricator.rb`
 
@@ -120,7 +120,7 @@ You should always start with a valid fixture.
          it{ should be_valid }
     end
 
-This makes sure you have all the correct data in your fixture. It kinda tests your model validations as well but I still like to be more verbose about this. This is why I've found something very easy to do this as well. You can use [shoulda-matchers](https://github.com/thoughtbot/shoulda-matchers) to test your model validations. I'll write 2 examples below, One with shoulda and one without. 
+This makes sure you have all the correct data in your fixture. It kinda tests your model validations as well but I still like to be more verbose about this. This is why I've found something very easy to do this as well. You can use [shoulda-matchers](https://github.com/thoughtbot/shoulda-matchers) to test your model validations. I'll write 2 examples below, One with shoulda and one without.
 
 *Without shoulda-matchers*
 
@@ -156,4 +156,3 @@ You should be testing you model instance and class methods as well. This is impo
       describe User do
         its(:to_s){ should eq [subject.first_name, subject.last_name].join }
       end
-

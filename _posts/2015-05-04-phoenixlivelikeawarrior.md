@@ -1,0 +1,56 @@
+---
+layout: post
+title: "Basic web app with Phoenix"
+description: ""
+category:
+tags: []
+---
+{% include JB/setup %}
+
+
+In this blog post i'm going to building a basic web app with the [Phoenix framework](http://www.phoenixframework.org/v0.12.0).
+
+
+This app will be a simple app that allows you to create users and then  create cars for that user. Simple right? Let's go!
+
+You'll need to install [Elixir] and [Phoenix] you can do that here:
+* Node & NPM: `brew install node`. You'll want NPM for all the JS goodies you get with Phoenix.
+* Elixir: http://elixir-lang.org/install.html
+* Phoenix:
+  * `$ mix local.hex`
+  * `$ mix archive.install https://github.com/phoenixframework/phoenix/releases/download/v0.12.0/phoenix_new-0.12.0.ez`
+
+
+Alright let's create our simple app.
+
+First we'll create our app with the `mix phoenix.new` command.
+
+      $ mix phoenix.new simple_phoenix_app
+
+When it asks `Install mix dependencies? [Yn]` say yes.
+
+When it asks `Install brunch.io dependencies? [Yn]` say yes.
+
+That's going to install all the things you need for your phoenix app.
+I've never heard of Brunch before Phoenix but it's a really nice template generator. check it out here: [Brunch.io](http://brunch.io/)
+
+Okay now we have our new Phoenix project. Let's run it.
+
+    $ cd simple_phoenix_app
+    $ mix phoenix.server
+
+Now you should be able to open your browser and visit http://localhost:4000
+
+
+Just like you would see in Rails. It's a simple welcome page. Yay!
+
+Okay now it's time for me just to show you the coolest batteries included feature about this framework. Open the `simple_phoenix_app/web/templates/page/index.html.eex` file in your editor. Then make sure you have the editor and browser pointed at http://localhost:4000 and it's visible. Now at the top of the page add a `h1` to the jumbotron div. like:  
+
+``` html
+<div class="jumbotron">
+  <h1>O Snap!</h1>
+  <h2>Welcome to Phoenix!</h2>
+  <p class="lead">Most frameworks make you choose between speed and a productive environment. <a href="http://phoenixframework.org">Phoenix</a> and <a href="http://elixir-lang.org">Elixir</a> give you both.</p>
+</div>
+```
+Then hit save. OMG!! You catch that?! Yeah auto-reloading baked in!!
