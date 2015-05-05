@@ -106,3 +106,12 @@ Then let's add a link to our home page that's points to the users index route.
   <%= link "Users", to: user_path(@conn, :index) %>
 </div>
 ```
+
+Now you should be able to click on the users link on the home page. *I didn't have to refresh the page either :)*
+
+Boom! We have our basic user index page!
+
+You can go ahead and create a user and all that fun stuff. *Try not to let your face melt with the speed. lol.*
+
+
+Now lets create our Car model for our users. 
