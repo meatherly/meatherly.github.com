@@ -29,7 +29,7 @@ Things you'll need:
 
 Alright let's create our simple app.
 
-## Coding
+## Create a new Phoenix app
 
 
 First we'll create our app with the `mix phoenix.new` command.
@@ -68,6 +68,8 @@ Okay now it's time for me just to show you the coolest "batteries included" feat
 </div>
 ```
 Then hit save. OMG!! You catch that?! Yeah auto-reloading baked in!!
+
+## Create user scaffolding
 
 Alright let's create our first model. We'll use the scaffold like command for Phoenix.
 
@@ -126,6 +128,7 @@ Boom! We have our basic user index page!
 
 You can go ahead and create a user and all that fun stuff. *Try not to let your face melt with the speed. lol.*
 
+## Create car model
 
 Now lets create our Car model for our users. Well use the model generator because we're not creating a top level route.
 
@@ -154,6 +157,8 @@ Now let's migrate our DB to add the latest migration
 
 `$ mix ecto.migrate`
 
+## Adding a relationship between cars and users
+
 We'll need to edit our car and user model and add the relationships to it
 
 ```elixir
@@ -181,6 +186,8 @@ schema "cars" do
 end
 ###...
 ```
+
+## Adding Car controller, view and templates
 
 Now let's create our Controller, View, and Templates.
 
@@ -325,6 +332,7 @@ Now let's create a new user on our web app using the site. Navigate to [http://l
 
 Create the new user. Now submit the form and you should see your user. Click on the show button for that user and you should see the Cars link we made on the bottom of the page! YAY!
 
+## Add new action for car controller
 
 Now Let's add the new action to the car controller to render the new car form. And since we've made that find_user plug it's going to be smaller than you think :)
 
@@ -341,6 +349,8 @@ You might be wondering. Won't I need the user for the view since we have a `@use
 So pro tip: You can add things to the assigns to DRY up your controllers.
 
 Okay now you can render the new car form from then car index page. YAY!
+
+## Add create action for car controller
 
 Now let's add the create action so we can submit the car form. This one will be a bit longer than the new action.
 
@@ -367,5 +377,8 @@ end
 Wow! right? lol. Let's talk about some of this. First off let's talk about that random build function just hanging out in there. Well I stumbled into this file `simple_phoenix_app/web/web.ex` and saw this where all the `use SimplePhoenixApp.Web, :view` are coming from. It has all the View, Model, Controller, and Router functions defined. In the controller one they `import Ecto.Model` which that has the build function. It's very similar to the ActiveRecord build method. You can read more about it [here](http://hexdocs.pm/ecto/). The rest of the action should look very similar to the UserController create action. So if the changeset isn't valid we're just rendering the new page again with the errors. Else we're sending them back the index page for the cars for the user.
 
 Well what are you waiting for?! Try it out!!
+
+
+## Ending notes
 
 So how bout dem apples! we've built a simple Phoenix App I bet you might have a lot questions and I bet I don't have a lot of answers but if you head over to the IRC room #elixir-lang there are some great guys in there that would love to help. Even the creator of the Framework :)
