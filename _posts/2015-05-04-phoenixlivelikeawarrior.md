@@ -30,9 +30,9 @@ Alright let's create our simple app.
 
 
 First we'll create our app with the `mix phoenix.new` command.
-
+```
       $ mix phoenix.new simple_phoenix_app
-
+```
 When it asks `Install mix dependencies? [Yn]` say yes.
 
 When it asks `Install brunch.io dependencies? [Yn]` say yes.
@@ -43,10 +43,10 @@ That's going to install all the things you need for your phoenix app.
 I've never heard of Brunch before Phoenix but it's a really nice template generator. check it out here: [Brunch.io](http://brunch.io/)
 
 Okay now we have our new Phoenix project. Let's run it.
-
-    $ cd simple_phoenix_app
-    $ mix phoenix.server
-
+```
+$ cd simple_phoenix_app
+$ mix phoenix.server
+```
 Now you should be able to open your browser and visit http://localhost:4000
 
 
@@ -54,7 +54,7 @@ Just like you would see in Rails. It's a simple welcome page. Yay!
 
 Okay now it's time for me just to show you the coolest "batteries included" feature about this framework. Open the `simple_phoenix_app/web/templates/page/index.html.eex` file in your editor. Then make sure you have the editor and browser pointed at http://localhost:4000 and it's visible. Now at the top of the page add a `h1` to the jumbotron div. like:  
 
-``` html
+```html
 <div class="jumbotron">
   <h1>O Snap!</h1>
   <h2>Welcome to Phoenix!</h2>
@@ -77,30 +77,31 @@ The command above is creating from the output:
 Now let's follow the directions from the output.
 
 Add `resources "/users", UserController` to the `router.ex` file.
+```elixir
+### simple_phoenix_app/web/router.ex
+scope "/", SimplePhoenixApp do
+  pipe_through :browser # Use the default browser stack
 
-    ### simple_phoenix_app/web/router.ex
-    scope "/", SimplePhoenixApp do
-      pipe_through :browser # Use the default browser stack
-
-      get "/", PageController, :index
-      resources "/users", UserController
-    end
-
+  get "/", PageController, :index
+  resources "/users", UserController
+end
+```
 Before we migrate the DB we'll edit the DB connection info, or you can leave it if you have a postgres user with the password set to postgres, but I don't so i'm going to change mine to my username. I you change this stetting be sure to restart your server or else it won't pick up the changes.
-
-      ### simple_phoenix_app/config/dev.exs
-      ...
-      # Configure your database
-      config :simple_phoenix_app, SimplePhoenixApp.Repo,
-        adapter: Ecto.Adapters.Postgres,
-        username: "meatherly",
-        database: "simple_phoenix_app_dev"
+```elixir
+### simple_phoenix_app/config/dev.exs
+...
+# Configure your database
+config :simple_phoenix_app, SimplePhoenixApp.Repo,
+  adapter: Ecto.Adapters.Postgres,
+  username: "meatherly",
+  database: "simple_phoenix_app_dev"
+```
 
 Now let's create the DB and Migrate.
-
-    $ mix ecto.create
-    $ mix ecto.migrate
-
+```
+$ mix ecto.create
+$ mix ecto.migrate
+```
 Then let's add a link to our home page that's points to the users index route.
 
     ### simple_phoenix_app/web/templates/page/index.html.eex
@@ -200,7 +201,7 @@ end
 
 __Templates__
 `simple_phoenix_app/web/templates/index.html.eex`
-```html
+```rhtml
 <h2>Listing cars for <%= @user.name %></h2>
 
 <table class="table">
@@ -224,7 +225,7 @@ __Templates__
 ```
 
 `simple_phoenix_app/web/templates/new.html.eex`
-```html
+```html_ruby
 <h2>New car for <%= @user.name %></h2>
 
 <%= render "form.html", changeset: @changeset,
@@ -234,7 +235,7 @@ __Templates__
 ```
 
 `simple_phoenix_app/web/templates/form.html.eex`
-```html
+```html_ruby
 <%= form_for @changeset, @action, fn f -> %>
   <%= if f.errors != [] do %>
     <div class="alert alert-danger">
