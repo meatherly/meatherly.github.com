@@ -371,7 +371,6 @@ def create(conn, %{"car" => car_params}) do
   else
     render(conn, "new.html", changeset: changeset)
   end
-  render conn, changeset
 end
 ```
 
