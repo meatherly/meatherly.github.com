@@ -13,6 +13,9 @@ In this blog post i'm going to building a basic web app with the [Phoenix framew
 
 This app will be a simple app that allows you to create users and then  create cars for that user. Simple right? Let's go!
 
+
+## Setup
+
 You'll need to install [Elixir] and [Phoenix] you can do that here:
 * Postgres: `brew install postgresql`
 * Node & NPM: `brew install node`. You'll want NPM for all the JS goodies you get with Phoenix.
@@ -21,8 +24,10 @@ You'll need to install [Elixir] and [Phoenix] you can do that here:
   * `$ mix local.hex`
   * `$ mix archive.install https://github.com/phoenixframework/phoenix/releases/download/v0.12.0/phoenix_new-0.12.0.ez`
 
-
 Alright let's create our simple app.
+
+## Coding
+
 
 First we'll create our app with the `mix phoenix.new` command.
 
@@ -138,6 +143,10 @@ We need to edit the migration first to make the referenced foreign key for the u
   end
 ```
 
+Now let's migrate our DB to add the latest migration
+
+`$ mix ecto.migrate`
+
 We'll need to edit our car and user model and add the relationships to it
 
 ```elixir
@@ -155,6 +164,7 @@ end
 
 ```elixir
 ### simple_phoenix_app/web/models/car.ex
+###...
 schema "cars" do
   belongs_to :user, SimplePhoenixApp.User
   field :name, :string
@@ -162,6 +172,7 @@ schema "cars" do
 
   timestamps
 end
+###...
 ```
 
 Now let's create our Controller, View, and Templates.
@@ -291,4 +302,61 @@ def index(conn, _params) do
 end
 ```
 
-You'll notice we get our user from the `conn.assigns` map that we made down in the `find_user` function.
+You'll notice we get our user from the `conn.assigns` map that we made down in the `find_user` function. You can't really have global instances variables like you have in Ruby in Elixir. So we have to add assignments to the connection and pass that around.
+
+Next lets add a link to the user's cars on the user's show page.
+
+```html
+<!-- simple_phoenix_app/web/templates/user/show.html.eex -->
+<%= link "Back", to: user_path(@conn, :index) %>
+| <%= link "Cars", to: user_car_path(@conn, :index, @user) %>
+```
+
+You can add this link to the bottom of the show page.
+
+Now let's create a new user on our web app using the site. Navigate to [http://localhost:4000/users]() click on New user link.
+
+Create the new user. Now submit the form and you should see your user. Click on the show button for that user and you should see the Cars link we made on the bottom of the page! YAY!
+
+
+Now Let's add the new action to the car controller to render the new car form. And since we've made that find_user plug it's going to be smaller than you think :)
+
+```elixir
+#...
+def new(conn, _) do
+  changeset = Car.changeset(%Car{})
+  render conn, changeset: changeset
+end
+#...
+```
+You might be wondering. Won't I need the user for the view since we have a `@user` variable in the view? Well no since we've added the user to the connections assignments that means it was sent down with the connection to the view and the view passed it along to the templates.
+
+So pro tip: You can add things to the assigns to DRY up your controllers.
+
+Okay now you can render the new car form from then car index page. YAY!
+
+Now let's add the create action so we can submit the car form. This one will be a bit longer than the new action.
+
+```elixir
+def create(conn, %{"car" => car_params}) do
+
+  changeset =
+    build(conn.assigns.user, :cars)
+    |> Car.changeset(car_params)
+
+  if changeset.valid? do
+    Repo.insert(changeset)
+
+    conn
+      |> put_flash(:info, "Car has been successfully created.")
+      |> redirect(to: user_car_path(conn, :index, conn.assigns.user))
+  else
+    render(conn, "new.html", changeset: changeset)
+  end
+  render conn, changeset
+end
+```
+
+Wow! right? lol. Let's talk about some of this. First off let's talk about that random build function just hanging out in there. Well I stumbled into this file `simple_phoenix_app/web/web.ex` and saw this where all the `use SimplePhoenixApp.Web, :view` are coming from. It has all the View, Model, Controller, and Router functions defined. In the controller one they `import Ecto.Model` which that has the build function. You can read more about it [here](http://hexdocs.pm/ecto/)
+
+So how bout dem apples! we've built a simple Phoenix App I bet you might have a lot questions and I bet I don't have a lot of answers but if you head over to the IRC room #elixir-lang there are some great guys in there that would love to help. Even the creator of the Framework :)
