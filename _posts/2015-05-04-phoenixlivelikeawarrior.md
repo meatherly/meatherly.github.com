@@ -3,7 +3,7 @@ layout: post
 title: "Basic web app with Phoenix"
 description: ""
 category:
-tags: []
+tags: [phoenix elixir]
 ---
 {% include JB/setup %}
 
@@ -71,8 +71,9 @@ The command above is creating from the output:
 
 Now let's follow the directions from the output.
 
-Add `resources "/users", UserController` to the `simple_phoenix_app/web/router.ex` file.
+Add `resources "/users", UserController` to the `router.ex` file.
 
+    ### simple_phoenix_app/web/router.ex
     scope "/", SimplePhoenixApp do
       pipe_through :browser # Use the default browser stack
 
@@ -114,4 +115,180 @@ Boom! We have our basic user index page!
 You can go ahead and create a user and all that fun stuff. *Try not to let your face melt with the speed. lol.*
 
 
-Now lets create our Car model for our users. 
+Now lets create our Car model for our users. Well use the model generator because we're not creating a top level route.
+
+    $ mix phoenix.gen.model Car cars name year:integer
+
+We need to edit the migration first to make the referenced foreign key for the users and cars. To do that we'll need to add the `references` function to the user_id column.
+
+```elixir
+  ### simple_phoenix_app/priv/repo/migrations/*_create_car.exs
+  defmodule SimplePhoenixApp.Repo.Migrations.CreateCar do
+    use Ecto.Migration
+
+    def change do
+      create table(:cars) do
+        add :user_id, references(:users)
+        add :name, :string
+        add :year, :integer
+
+        timestamps
+      end
+    end
+  end
+```
+
+We'll need to edit our car and user model and add the relationships to it
+
+```elixir
+### simple_phoenix_app/web/models/user.ex
+###...
+schema "users" do
+  has_many :cars, SimplePhoenixApp.Car
+  field :name, :string
+  field :email, :string
+
+  timestamps
+end
+###...
+```
+
+```elixir
+### simple_phoenix_app/web/models/car.ex
+schema "cars" do
+  belongs_to :user, SimplePhoenixApp.User
+  field :name, :string
+  field :year, :integer
+
+  timestamps
+end
+```
+
+Now let's create our Controller, View, and Templates.
+
+__Controller__
+``` elixir
+### simple_phoenix_app/web/controllers/car_controller.ex
+defmodule SimplePhoenixApp.CarController do
+  use SimplePhoenixApp.Web, :controller
+
+  alias SimplePhoenixApp.Car
+
+  plug :action
+end
+```
+
+__View__
+```elixir
+### simple_phoenix_app/web/views/car_view.ex
+defmodule SimplePhoenixApp.CarView do
+  use SimplePhoenixApp.Web, :view
+
+end
+```
+
+__Templates__
+`simple_phoenix_app/web/templates/index.html.eex`
+```html
+<h2>Listing cars for <%= @user.name %></h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Year</th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for car <- @cars do %>
+    <tr>
+      <td><%= car.name %></td>
+      <td><%= car.email %></td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New car", to: user_car_path(@conn, :new, @user) %>
+```
+
+`simple_phoenix_app/web/templates/new.html.eex`
+```html
+<h2>New car for <%= @user.name %></h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: user_car_path(@conn, :create, @user) %>
+
+<%= link "Back to cars", to: user_car_path(@conn, :index, @user) %>
+```
+
+`simple_phoenix_app/web/templates/form.html.eex`
+```html
+<%= form_for @changeset, @action, fn f -> %>
+  <%= if f.errors != [] do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below:</p>
+      <ul>
+        <%= for {attr, message} <- f.errors do %>
+          <li><%= humanize(attr) %> <%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <label>Name</label>
+    <%= text_input f, :name, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <label>Year</label>
+    <%= number_input f, :year, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= submit "Submit", class: "btn btn-primary" %>
+  </div>
+<% end %>
+```
+
+And one last thing let's add our cars route to the `router.ex` file. Just add the cars route inside a block for the users route.
+
+```elixir
+scope "/", SimplePhoenixApp do
+  pipe_through :browser # Use the default browser stack
+
+  get "/", PageController, :index
+  resources "/users", UserController do
+    resources "/cars", CarController
+  end
+end
+```
+
+Alright time to edit our CarController to add the needed plugs and actions. Let's start with a plug to find the user. Let's add the `find_user` function at the bottom of the controller. Then add the `plug :find_user` above the action plug since plugs are executed in the order they are defined.
+
+```elixir
+defmodule SimplePhoenixApp.CarController do
+  #...
+  plug :find_user
+  plug :action
+  #...
+  defp find_user(conn, _) do
+    user = Repo.get(SimplePhoenixApp.User, conn.params["user_id"])
+    assign(conn, :user, user)
+  end
+end
+```
+
+Now let's add our index action to the controller
+
+```elixir
+def index(conn, _params) do
+  user = conn.assigns.user
+  cars = Repo.all assoc(user, :cars)
+
+  render conn, cars: cars, user: user
+end
+```
+
+You'll notice we get our user from the `conn.assigns` map that we made down in the `find_user` function.
