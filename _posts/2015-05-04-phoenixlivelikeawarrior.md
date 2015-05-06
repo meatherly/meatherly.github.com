@@ -214,7 +214,7 @@ end
 
 __Templates__
 `simple_phoenix_app/web/templates/index.html.eex`
-```rhtml
+```html_ruby
 <h2>Listing cars for <%= @user.name %></h2>
 
 <table class="table">
