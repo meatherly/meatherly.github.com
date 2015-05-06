@@ -11,7 +11,7 @@ tags: [phoenix elixir]
 
 ## Overview
 
-In this blog post i'm going to building a basic web app with the [Phoenix framework](http://www.phoenixframework.org/v0.12.0). I want to pick up from where the getting started guide for phoenix left you. Let's create a nested model relationship app. I hope to also show my little neat tricks i've learned along the way. Just a heads up, I'm writing this blog like you've already went through the getting started guide for elixir and you're ready for the next step. So if you're feeling a little lost please consult the [Overview page](http://www.phoenixframework.org/v0.12.0/docs/overview).
+In this blog post i'm going to be building a basic web app with the [Phoenix framework](http://www.phoenixframework.org/v0.12.0). I want to pick up from where the getting started guide for phoenix left you. Let's create a nested model relationship app. I hope to also show my little neat tricks i've learned along the way. Just a heads up, I'm writing this blog like you've already gone through the getting started guide for elixir and you're ready for the next step. So if you're feeling a little lost please consult the [Overview page](http://www.phoenixframework.org/v0.12.0/docs/overview).
 
 
 This will be a simple app that allows you to create users and then create cars for that user. Simple right? Let's go!
@@ -47,6 +47,7 @@ Now you should have all your dependencies to create the app.
 
 That's going to install all the things you need for your phoenix app.
 I've never heard of Brunch before Phoenix but it's a really nice template generator. check it out here:
+(http://brunch.io/)
 
 Okay now we have our new Phoenix project. Let's run it.
 ```
@@ -67,7 +68,7 @@ Okay now it's time for me just to show you the coolest "batteries included" feat
   <p class="lead">Most frameworks make you choose between speed and a productive environment. <a href="http://phoenixframework.org">Phoenix</a> and <a href="http://elixir-lang.org">Elixir</a> give you both.</p>
 </div>
 ```
-Then hit save. OMG!! You catch that?! Yeah auto-reloading baked in!!
+Then hit save. OMG!! You catch that?! Auto-reloading baked in!!
 
 ## Create user scaffolding
 
@@ -316,7 +317,7 @@ def index(conn, _params) do
 end
 ```
 
-You'll notice we get our user from the `conn.assigns` map that we made down in the `find_user` function. You can't really have global instances variables like you have in Ruby in Elixir. So we have to add assignments to the connection and pass that around.
+You'll notice we get our user from the `conn.assigns` map that we made down in the `find_user` function. You can't really have instance variables flying around your controllers like you have in Ruby in Elixir. So we have to add assignments to the connection and pass that around.
 
 Next lets add a link to the user's cars on the user's show page.
 
