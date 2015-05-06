@@ -8,18 +8,21 @@ tags: [phoenix elixir]
 {% include JB/setup %}
 
 
-In this blog post i'm going to building a basic web app with the [Phoenix framework](http://www.phoenixframework.org/v0.12.0).
+
+## Overview
+
+In this blog post i'm going to building a basic web app with the [Phoenix framework](http://www.phoenixframework.org/v0.12.0). I want to pick up from where the getting started guide for phoenix left you. Let's create a nested model relationship app. I hope to also show my little neat tricks i've learned along the way. Just a heads up, I'm writing this blog like you've already went through the getting started guide for elixir and you're ready for the next step. So if you're feeling a little lost please consult the [Overview page](http://www.phoenixframework.org/v0.12.0/docs/overview).
 
 
-This app will be a simple app that allows you to create users and then  create cars for that user. Simple right? Let's go!
+This will be a simple app that allows you to create users and then create cars for that user. Simple right? Let's go!
 
 
 ## Setup
 
-You'll need to install [Elixir] and [Phoenix] you can do that here:
-* Postgres: `brew install postgresql`
-* Node & NPM: `brew install node`. You'll want NPM for all the JS goodies you get with Phoenix.
-* Elixir: http://elixir-lang.org/install.html
+Things you'll need:
+* Postgres: `brew install postgresql`. This will be your DB service.
+* Node & NPM: `brew install node`. You'll want NPM for all the JS goodies you get with Phoenix. Phoenix uses [Brunch.io](http://brunch.io/). It's the first time i've heard of it and it looks really cool!
+* Elixir: [http://elixir-lang.org/install.html](http://elixir-lang.org/install.html)
 * Phoenix:
   * `$ mix local.hex`
   * `$ mix archive.install https://github.com/phoenixframework/phoenix/releases/download/v0.12.0/phoenix_new-0.12.0.ez`
@@ -31,16 +34,19 @@ Alright let's create our simple app.
 
 First we'll create our app with the `mix phoenix.new` command.
 ```
-      $ mix phoenix.new simple_phoenix_app
+$ mix phoenix.new simple_phoenix_app
 ```
-When it asks `Install mix dependencies? [Yn]` say yes.
 
-When it asks `Install brunch.io dependencies? [Yn]` say yes.
+When it asks:
+* `Install mix dependencies? [Yn]` say yes.
+  * yes.
+* `Install brunch.io dependencies? [Yn]`
+  * yes.
 
-This will use NPM to install the
+Now you should have all your dependencies to create the app.
 
 That's going to install all the things you need for your phoenix app.
-I've never heard of Brunch before Phoenix but it's a really nice template generator. check it out here: [Brunch.io](http://brunch.io/)
+I've never heard of Brunch before Phoenix but it's a really nice template generator. check it out here:
 
 Okay now we have our new Phoenix project. Let's run it.
 ```
@@ -358,6 +364,8 @@ def create(conn, %{"car" => car_params}) do
 end
 ```
 
-Wow! right? lol. Let's talk about some of this. First off let's talk about that random build function just hanging out in there. Well I stumbled into this file `simple_phoenix_app/web/web.ex` and saw this where all the `use SimplePhoenixApp.Web, :view` are coming from. It has all the View, Model, Controller, and Router functions defined. In the controller one they `import Ecto.Model` which that has the build function. You can read more about it [here](http://hexdocs.pm/ecto/)
+Wow! right? lol. Let's talk about some of this. First off let's talk about that random build function just hanging out in there. Well I stumbled into this file `simple_phoenix_app/web/web.ex` and saw this where all the `use SimplePhoenixApp.Web, :view` are coming from. It has all the View, Model, Controller, and Router functions defined. In the controller one they `import Ecto.Model` which that has the build function. It's very similar to the ActiveRecord build method. You can read more about it [here](http://hexdocs.pm/ecto/). The rest of the action should look very similar to the UserController create action. So if the changeset isn't valid we're just rendering the new page again with the errors. Else we're sending them back the index page for the cars for the user.
+
+Well what are you waiting for?! Try it out!!
 
 So how bout dem apples! we've built a simple Phoenix App I bet you might have a lot questions and I bet I don't have a lot of answers but if you head over to the IRC room #elixir-lang there are some great guys in there that would love to help. Even the creator of the Framework :)
