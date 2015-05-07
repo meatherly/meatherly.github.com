@@ -20,6 +20,7 @@ This will be a simple app that allows you to create users and then create cars f
 ## Setup
 
 Things you'll need:
+
 * Postgres: `brew install postgresql`. This will be your DB service.
 * Node & NPM: `brew install node`. You'll want NPM for all the JS goodies you get with Phoenix. Phoenix uses [Brunch.io](http://brunch.io/). It's the first time i've heard of it and it looks really cool!
 * Elixir: [http://elixir-lang.org/install.html](http://elixir-lang.org/install.html)
@@ -33,12 +34,14 @@ Alright let's create our simple app.
 
 
 First we'll create our app with the `mix phoenix.new` command.
+
 ```
 $ mix phoenix.new simple_phoenix_app
 ```
 
 When it asks:
-* `Install mix dependencies? [Yn]` say yes.
+
+* `Install mix dependencies? [Yn]`
   * yes.
 * `Install brunch.io dependencies? [Yn]`
   * yes.
@@ -50,10 +53,14 @@ I've never heard of Brunch before Phoenix but it's a really nice template genera
 (http://brunch.io/)
 
 Okay now we have our new Phoenix project. Let's run it.
-```
+
+``` bash
+
 $ cd simple_phoenix_app
 $ mix phoenix.server
+
 ```
+
 Now you should be able to open your browser and visit http://localhost:4000
 
 
@@ -68,6 +75,7 @@ Okay now it's time for me just to show you the coolest "batteries included" feat
   <p class="lead">Most frameworks make you choose between speed and a productive environment. <a href="http://phoenixframework.org">Phoenix</a> and <a href="http://elixir-lang.org">Elixir</a> give you both.</p>
 </div>
 ```
+
 Then hit save. OMG!! You catch that?! Auto-reloading baked in!!
 
 ## Create user scaffolding
@@ -77,6 +85,7 @@ Alright let's create our first model. We'll use the scaffold like command for Ph
     $ mix phoenix.gen.html User users name email
 
 The command above is creating from the output:
+
 * A `User` model
 * A `users` table
 * With the string attributes `name` and `email`
@@ -86,6 +95,7 @@ The command above is creating from the output:
 Now let's follow the directions from the output.
 
 Add `resources "/users", UserController` to the `router.ex` file.
+
 ```elixir
 ### simple_phoenix_app/web/router.ex
 scope "/", SimplePhoenixApp do
@@ -95,7 +105,9 @@ scope "/", SimplePhoenixApp do
   resources "/users", UserController
 end
 ```
+
 Before we migrate the DB we'll edit the DB connection info, or you can leave it if you have a postgres user with the password set to postgres, but I don't so i'm going to change mine to my username. I you change this stetting be sure to restart your server or else it won't pick up the changes.
+
 ```elixir
 ### simple_phoenix_app/config/dev.exs
 ...
@@ -107,15 +119,16 @@ config :simple_phoenix_app, SimplePhoenixApp.Repo,
 ```
 
 Now let's create the DB and Migrate.
+
 ```
 $ mix ecto.create
 $ mix ecto.migrate
 ```
+
 Then let's add a link to our home page that's points to the users index route.
 
-    ### simple_phoenix_app/web/templates/page/index.html.eex
-
 ``` html
+<!-- simple_phoenix_app/web/templates/page/index.html.eex -->
 <div class="jumbotron">
   <h2>Welcome to Phoenix!</h2>
   <p class="lead">Most frameworks make you choose between speed and a productive environment.</p>
@@ -138,25 +151,27 @@ Now lets create our Car model for our users. Well use the model generator becaus
 We need to edit the migration first to make the referenced foreign key for the users and cars. To do that we'll need to add the `references` function to the user_id column.
 
 ```elixir
-  ### simple_phoenix_app/priv/repo/migrations/*_create_car.exs
-  defmodule SimplePhoenixApp.Repo.Migrations.CreateCar do
-    use Ecto.Migration
+### simple_phoenix_app/priv/repo/migrations/*_create_car.exs
+defmodule SimplePhoenixApp.Repo.Migrations.CreateCar do
+  use Ecto.Migration
 
-    def change do
-      create table(:cars) do
-        add :user_id, references(:users)
-        add :name, :string
-        add :year, :integer
+  def change do
+    create table(:cars) do
+      add :user_id, references(:users)
+      add :name, :string
+      add :year, :integer
 
-        timestamps
-      end
+      timestamps
     end
   end
+end
 ```
 
 Now let's migrate our DB to add the latest migration
 
-`$ mix ecto.migrate`
+```
+$ mix ecto.migrate
+```
 
 ## Adding a relationship between cars and users
 
@@ -192,8 +207,10 @@ end
 
 Now let's create our Controller, View, and Templates.
 
-__Controller__
-``` elixir
+####Controller
+
+
+```elixir
 ### simple_phoenix_app/web/controllers/car_controller.ex
 defmodule SimplePhoenixApp.CarController do
   use SimplePhoenixApp.Web, :controller
@@ -204,7 +221,8 @@ defmodule SimplePhoenixApp.CarController do
 end
 ```
 
-__View__
+####View
+
 ```elixir
 ### simple_phoenix_app/web/views/car_view.ex
 defmodule SimplePhoenixApp.CarView do
@@ -213,9 +231,11 @@ defmodule SimplePhoenixApp.CarView do
 end
 ```
 
-__Templates__
+####Templates
+
 `simple_phoenix_app/web/templates/index.html.eex`
-```html_ruby
+
+```html
 <h2>Listing cars for <%= @user.name %></h2>
 
 <table class="table">
@@ -239,7 +259,8 @@ __Templates__
 ```
 
 `simple_phoenix_app/web/templates/new.html.eex`
-```html_ruby
+
+```html
 <h2>New car for <%= @user.name %></h2>
 
 <%= render "form.html", changeset: @changeset,
@@ -249,7 +270,8 @@ __Templates__
 ```
 
 `simple_phoenix_app/web/templates/form.html.eex`
-```html_ruby
+
+```html
 <%= form_for @changeset, @action, fn f -> %>
   <%= if f.errors != [] do %>
     <div class="alert alert-danger">
@@ -378,7 +400,30 @@ Wow! right? lol. Let's talk about some of this. First off let's talk about that 
 
 Well what are you waiting for?! Try it out!!
 
+## Extra credit
+After talking with some guys in the IRC channel I found out that I can DRY up our controller by adding the `alias SimplePhoenixApp.User` to the `simple_phoenix_app/web/web.ex` file in the controller section. Let's do that for kicks!
+
+```elixir
+def controller do
+  quote do
+    use Phoenix.Controller
+
+    # Alias the data repository and import query/model functions
+    alias SimplePhoenixApp.Repo
+    import Ecto.Model
+    import Ecto.Query, only: [from: 2]
+
+    # Import URL helpers from the router
+    import SimplePhoenixApp.Router.Helpers
+
+    alias SimplePhoenixApp.User
+  end
+end
+```
+
+Now we can take out the long namespaced names for User in the CarController! Yay!
+
 
 ## Ending notes
 
-So how bout dem apples! we've built a simple Phoenix App I bet you might have a lot questions and I bet I don't have a lot of answers but if you head over to the IRC room #elixir-lang there are some great guys in there that would love to help. Even the creator of the Framework :)
+So how bout dem apples! We've built a simple Phoenix App I bet you might have a lot questions and I bet I don't have a lot of answers but if you head over to the IRC room [#elixir-lang](https://botbot.me/freenode/elixir-lang/) there are some great guys in there that would love to help. Even the creator of the Framework :)
