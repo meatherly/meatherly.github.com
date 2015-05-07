@@ -14,7 +14,7 @@ tags: [phoenix elixir]
 In this blog post i'm going to be building a basic web app with the [Phoenix framework](http://www.phoenixframework.org/v0.12.0). I want to pick up from where the getting started guide for phoenix left you. Let's create a nested model relationship app. I hope to also show my little neat tricks i've learned along the way. Just a heads up, I'm writing this blog like you've already gone through the getting started guide for elixir and you're ready for the next step. So if you're feeling a little lost please consult the [Overview page](http://www.phoenixframework.org/v0.12.0/docs/overview).
 
 
-This will be a simple app that allows you to create users and then create cars for that user. Simple right? Let's go!
+This will be a simple app that allows you to create users and then create cars for that user. Simple right? Let's go! *You can see the code [here](https://github.com/meatherly/simple_phoenix_app)*
 
 
 ## Setup
