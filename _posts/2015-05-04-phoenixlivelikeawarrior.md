@@ -11,7 +11,7 @@ tags: [phoenix elixir]
 
 ## Overview
 
-In this blog post i'm going to be building a basic web app with the [Phoenix framework](http://www.phoenixframework.org/v0.12.0). I want to pick up from where the getting started guide for phoenix left you. Let's create a nested model relationship app. I hope to also show my little neat tricks i've learned along the way. Just a heads up, I'm writing this blog like you've already gone through the getting started guide for elixir and you're ready for the next step. So if you're feeling a little lost please consult the [Overview page](http://www.phoenixframework.org/v0.12.0/docs/overview).
+In this blog post I'm going to be building a basic web app with the [Phoenix framework](http://www.phoenixframework.org/v0.12.0). I want to pick up from where the getting started guide for phoenix left you. Let's create a nested model relationship app. I hope to also show my little neat tricks I've learned along the way. Just a heads up, I'm writing this blog like you've already gone through the getting started guide for elixir and you're ready for the next step. So if you're feeling a little lost please consult the [Overview page](http://www.phoenixframework.org/v0.12.0/docs/overview).
 
 
 This will be a simple app that allows you to create users and then create cars for that user. Simple right? Let's go! *You can see the code [here](https://github.com/meatherly/simple_phoenix_app)*
@@ -22,7 +22,7 @@ This will be a simple app that allows you to create users and then create cars f
 Things you'll need:
 
 * Postgres: `brew install postgresql`. This will be your DB service.
-* Node & NPM: `brew install node`. You'll want NPM for all the JS goodies you get with Phoenix. Phoenix uses [Brunch.io](http://brunch.io/). It's the first time i've heard of it and it looks really cool!
+* Node & NPM: `brew install node`. You'll want NPM for all the JS goodies you get with Phoenix. Phoenix uses [Brunch.io](http://brunch.io/). It's the first time I've heard of it and it looks really cool!
 * Elixir: [http://elixir-lang.org/install.html](http://elixir-lang.org/install.html)
 * Phoenix:
   * `$ mix local.hex`
@@ -84,7 +84,7 @@ Alright let's create our first model. We'll use the scaffold like command for Ph
 
     $ mix phoenix.gen.html User users name email
 
-The command above is creating from the output:
+The command above is creating:
 
 * A `User` model
 * A `users` table
@@ -106,7 +106,7 @@ scope "/", SimplePhoenixApp do
 end
 ```
 
-Before we migrate the DB we'll edit the DB connection info, or you can leave it if you have a postgres user with the password set to postgres, but I don't so i'm going to change mine to my username. I you change this stetting be sure to restart your server or else it won't pick up the changes.
+Before we migrate the DB we'll edit the DB connection info, or you can leave it if you have a postgres user with the password set to postgres, but I don't so I'm going to change mine to my username. I you change this stetting be sure to restart your server or else it won't pick up the changes.
 
 ```elixir
 ### simple_phoenix_app/config/dev.exs
@@ -125,7 +125,7 @@ $ mix ecto.create
 $ mix ecto.migrate
 ```
 
-Then let's add a link to our home page that's points to the users index route.
+Then let's add a link to our home page that points to the user's index route.
 
 ``` html
 <!-- simple_phoenix_app/web/templates/page/index.html.eex -->
