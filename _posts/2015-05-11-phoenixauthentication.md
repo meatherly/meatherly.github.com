@@ -10,7 +10,7 @@ tags: [phoenix authentication comeonin plug]
 
 ## Overview
 
-Ever wondered how hard it is to implement authentication with Phoenix? Ever wondered how hard it is to roll your own authentication in Phoenix? Well in this blog post we'll find out!
+Ever wonder how hard it is to implement authentication with Phoenix? Ever wondered how hard it is to roll your own authentication in Phoenix? Well in this blog post we'll find out!
 
 We'll be making an app called Phitter. An where users can post their thoughts that are 255 characters in length for all to see. In order to do this we'll need 2 models: User and Pheets. We'll learn how to make a Plug for authentication.
 
