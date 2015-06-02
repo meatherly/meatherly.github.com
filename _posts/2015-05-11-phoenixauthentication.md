@@ -517,3 +517,126 @@ end
 ```
 
 We've added the relationship between user and pheet. We've got `user_id` and `body` in the required_fields so that they'll throw errors if they are nil. *(If you haven't noticed by now. The required_fields is basically validates presence true in Rails ActiveRecord validations)*
+
+Now that we have that let's add our controllers and views for Pheets
+
+### Creating Pheet Controller
+
+The controller is pretty simple. To make this app easy you'll only be aloud to create Pheets. This way we'll only need 3 actions `index/2`, `new/2`, and `create/2`.
+
+We'll also play around with Ecto.Query. Specifically the `preload` and `order_by` functions. Take a look:
+
+``` elixir
+defmodule Phitter.PheetController do
+  use Phitter.Web, :controller
+
+  alias Phitter.Pheet
+
+  plug Phitter.Plug.Authenticate
+  plug :scrub_params, "pheet" when action in [:create, :update]
+  plug :action
+
+  def index(conn, _params) do
+    pheets = Repo.all from p in Pheet,
+      order_by: [desc: p.updated_at],
+      preload: [:user]
+
+    render(conn, "index.html", pheets: pheets)
+  end
+
+  def new(conn, _params) do
+    changeset = Pheet.changeset(%Pheet{})
+    render(conn, "new.html", changeset: changeset)
+  end
+
+  def create(conn, %{"pheet" => pheet_params}) do
+    new_pheet = build(conn.assigns.current_user, :pheets)
+    changeset = Pheet.changeset(new_pheet, pheet_params)
+
+    if changeset.valid? do
+      Repo.insert(changeset)
+
+      conn
+      |> put_flash(:info, "Pheet created successfully.")
+      |> redirect(to: pheet_path(conn, :index))
+    else
+      render(conn, "new.html", changeset: changeset)
+    end
+  end
+end
+```
+
+Now I'll let you go ahead and create your `PheetView` and I'll post the views below. *(I need to find out how to make it default to a ApplicationView if you don't need one. I feel odd just creating blank view modules. Feel free to comment if you know anything about that.)*
+
+
+### Pheet new.html.eex, form.html.eex, index.html.eex
+
+The templates are pretty simple. Just add the user to the index and we're good.
+
+
+new.html.eex
+
+``` html
+<h2>New pheet</h2>
+
+<%= render "form.html", changeset: @changeset,
+                        action: pheet_path(@conn, :create) %>
+
+<%= link "Back", to: pheet_path(@conn, :index) %>
+```
+
+form.html.eex
+
+``` html
+<%= form_for @changeset, @action, fn f -> %>
+  <%= if f.errors != [] do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below:</p>
+      <ul>
+        <%= for {attr, message} <- f.errors do %>
+          <li><%= humanize(attr) %> <%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <label>Body</label>
+    <%= text_input f, :body, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= submit "Submit", class: "btn btn-primary" %>
+  </div>
+<% end %>
+
+```
+
+index.html.eex
+
+``` html
+
+<div>
+  Hello, <%= @current_user.username %> <%= link "Logout", to: session_path(@conn, :delete) %>
+</div>
+
+<div class="text-center">
+  <%= link "New pheet", to: pheet_path(@conn, :new), class: "btn btn-primary " %>
+</div>
+
+
+
+<div id="pheets-wrapper">
+  <%= for pheet <- @pheets do %>
+      <div class="pheet">
+        <div class="pheet-author">
+          <%= pheet.body %>
+        </div>
+        <div class="pheet-author">
+          - <%= pheet.user.username %>
+        </div>
+      </div>
+  <% end %>
+</div>
+
+```
