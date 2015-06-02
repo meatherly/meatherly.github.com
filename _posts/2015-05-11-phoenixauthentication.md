@@ -14,7 +14,16 @@ Ever wonder how hard it is to implement authentication with Phoenix? Ever wonder
 
 We'll be making an app called Phitter. An where users can post their thoughts that are 255 characters in length for all to see. In order to do this we'll need 2 models: User and Pheets. We'll learn how to make a Plug for authentication.
 
-Before I get started I want to thank all those who've helped me make this possible by listening to my questions.
+Before I get started just wanted to let you guys in on a few things:
+
+I want to thank all those who've helped me make this possible by helping me with all my questions:
+ * [ericmj](https://github.com/ericmj)
+ * [chrismccord](https://github.com/chrismccord)
+ * [crododile](https://github.com/crododile)
+
+I got my first pull request merged into Ecto!! https://github.com/elixir-lang/ecto/pull/597#issuecomment-102262215 Yay!
+
+And lastly, If you didn't know my wife and I just got our referral for a little girl from South Korea. We're doing some fund raising to support our adoption so wanted to invite you guys to Show off your smarts and support adoption! http://buff.ly/1Q0caW0
 
 Alright let's go!
 
@@ -25,7 +34,7 @@ Alright let's go!
 * * Make a custom validation to validate those fields.
 * We'll make a registration controller for allowing user's to sign up.
 * We'll make a session controller to validate and control user session.
-* We'll use the [comeonin]() package for encrypting passwords.
+* We'll use the [comeonin](https://github.com/elixircnx/comeonin) package for encrypting passwords.
 * We'll make a Pheet model. This will just have 2 fields. user_id and body
 
 ### Make a new project
