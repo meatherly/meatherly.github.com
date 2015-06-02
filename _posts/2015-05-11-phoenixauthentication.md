@@ -20,6 +20,7 @@ I want to thank all those who've helped me make this possible by helping me with
  * [ericmj](https://github.com/ericmj)
  * [chrismccord](https://github.com/chrismccord)
  * [crododile](https://github.com/crododile)
+ * [jpiked](https://twitter.com/jpiked)
 
 I got my first pull request merged into Ecto!! https://github.com/elixir-lang/ecto/pull/597#issuecomment-102262215 Yay!
 
