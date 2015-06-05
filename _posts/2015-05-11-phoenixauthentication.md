@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Phoenix app with home made authentication"
+title: "Phoenix app with authentication"
 description: "Rolling in the deep with Authentication and Phoenix"
 category:
 tags: [phoenix authentication comeonin plug]
@@ -8,15 +8,18 @@ tags: [phoenix authentication comeonin plug]
 {% include JB/setup %}
 
 
+*I've just posted this but I still need to proof read a lot. Thought you guys might want to see what I've been working on. Please don't count this against me :p*
+
 ## Overview
 
-Ever wonder how hard it is to implement authentication with Phoenix? Ever wondered how hard it is to roll your own authentication in Phoenix? Well in this blog post we'll find out!
+Ever wonder how hard it is to implement authentication with Phoenix or how hard it is to roll your own authentication in Phoenix? Well in this blog post we'll find out!
 
 We'll be making an app called Phitter. An where users can post their thoughts that are 255 characters in length for all to see. In order to do this we'll need 2 models: User and Pheets. We'll learn how to make a Plug for authentication.
 
 Before I get started just wanted to let you guys in on a few things:
 
 I want to thank all those who've helped me make this possible by helping me with all my questions:
+
  * [ericmj](https://github.com/ericmj)
  * [chrismccord](https://github.com/chrismccord)
  * [crododile](https://github.com/crododile)
@@ -24,7 +27,15 @@ I want to thank all those who've helped me make this possible by helping me with
 
 I got my first pull request merged into Ecto!! https://github.com/elixir-lang/ecto/pull/597#issuecomment-102262215 Yay!
 
-And lastly, If you didn't know my wife and I just got our referral for a little girl from South Korea. We're doing some fund raising to support our adoption so wanted to invite you guys to Show off your smarts and support adoption! http://buff.ly/1Q0caW0
+And lastly, If you didn't know my wife and I just got our referral for a little girl from South Korea. We're doing some fund raising to support our adoption so wanted to invite you guys to: Show off your smarts and support adoption! http://buff.ly/1Q0caW0
+
+Just a heads up. This post is long because we're creating an app from scratch. If you would like to learn how to add Authentication to your existing app then read these sections of the post:
+
+* [Create User](#create-a-user-model) - only read this if you don't have a username and password field.
+* [Registration Controller](#registration-controller)
+* [Authentication Plug](#authentication-plug)
+
+You can see the repo for this app [here](https://github.com/meatherly/Phitter).
 
 Alright let's go!
 
@@ -32,7 +43,7 @@ Alright let's go!
 
 * Make a user model. User will have a username and encrypted_password.
 * We'll make 2 virtual fields: password and password_confirmation.
-* * Make a custom validation to validate those fields.
+* Make a custom validation to validate those fields.
 * We'll make a registration controller for allowing user's to sign up.
 * We'll make a session controller to validate and control user session.
 * We'll use the [comeonin](https://github.com/elixircnx/comeonin) package for encrypting passwords.
@@ -49,11 +60,9 @@ mix phoenix.new phitter
 Let's make a few changes to the application layout before we move on to making our user model.
 
 
-```
-pitter/web/templates/layout/application.html.eex
-```
-
 ``` html
+<!-- pitter/web/templates/layout/application.html.eex -->
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -94,7 +103,7 @@ Let's create a user model with these fields: username:string, encrypted_password
 $ mix phoenix.gen.model User users username encrypted_password
 ```
 
-Since we're not store the `password` and `password_confirmation` we'll have to make them virtual attributes using Ecto. We'll also want to make sure we validate those fields. We'll need a custom validation since ecto doesn't have a `validates :confirmation` yet.
+Since we're not storing the `password` and `password_confirmation` fields we'll have to make them virtual attributes using Ecto. We'll also want to make sure we validate those fields. We'll need a custom validation since ecto doesn't have a `validates :confirmation` yet...but watch for my pull request because it'll add this feature to ecto :P
 
 ``` elixir
 defmodule Phitter.User do
@@ -158,7 +167,7 @@ end
 
 We'll implement the  `RegistrationController` step by step. Let's Go!
 
-Let's create our registrations controller to allow the user to create an account.
+First create a registrations controller to allow the user to create an account.
 
 ``` elixir
 ## phitter/web/controllers/registration_controller.ex
@@ -186,9 +195,9 @@ end
 
 Let's make our registration form.
 
-`phitter/web/templates/registration/new.html.eex`
-
 ``` html
+<!-- phitter/web/templates/registration/new.html.eex -->
+
 <h3>Registration</h3>
 <%= form_for @changeset, registration_path(@conn, :create), fn f -> %>
   <%= if f.errors != [] do %>
@@ -245,9 +254,7 @@ Check out the new action by going to [http://localhost:4000/registration](http:/
 
 You should be able to see your new registration form! Yay! Now let's add the `create/2` action for our registration controller.
 
-### RegistrationController create/2
-
-Next let's add our `comeonin` package for encryption.
+Now let's add our `comeonin` package for encryption.
 
 ``` elixir
 ## phitter/mix.exs
@@ -262,8 +269,7 @@ defp deps do
 end
 ```
 
-Now let's implement the RegistrationController's create action. This will create the user and store their ecto model in the session if all their validations pass or it will render the `new/2` action if the validations fail.
-
+Now implement the RegistrationController's create action. This will create the user and store their ecto model in the session if all their validations pass or it will render the `new/2` action if the validation fails.
 
 ``` elixir
 # phitter/web/controllers/registration_controller.ex
@@ -321,6 +327,10 @@ defmodule Phitter.Password do
   end
 end
 ```
+
+In this module we're importing 2 functions. This is nice so we don't have to bloat our module with unused functions. What's nice about the `Repo.insert/1` function is that it returns the model after insert so we can use that in our controller to store the user model in the session.
+
+We could have put `generate_password/1` and `generate_password_and_store_user/1` one method but I decided to split it up. You can do the same or put it all in one function. The choice is yours.
 
 Alright, our `RegistrationController` should be finished now. We can visit the registration form and test it now. After you create a user it should redirect to the pages index page with a flash message letting you know that you've logged in. If something goes wrong it should render the new page again with errors. We have it redirecting to the pages controller but we'll change that to the `PheetController` soon.
 
@@ -530,6 +540,35 @@ We've added the relationship between user and pheet. We've got `user_id` and `bo
 
 Now that we have that let's add our controllers and views for Pheets
 
+
+### Authentication Plug
+
+Now that we need to start authenticating users we'll create a plug to allow us to authenticate users on each request. If the user is authenticated it'll move on to the action, if not then it will redirect them to the login page. Creating a plug was easier than I thought. Thanks to (addict)[] package for some tips on how to do this.
+
+
+``` elixir
+
+
+defmodule Phitter.Plug.Authenticate do
+  import Plug.Conn
+  import Phitter.Router.Helpers
+  import Phoenix.Controller
+
+  def init(default), do: default
+
+  def call(conn, default) do
+    current_user = get_session(conn, :current_user)
+    if current_user do
+      assign(conn, :current_user, current_user)
+    else
+      conn
+        |> put_flash(:error, 'You need to be signed in to view this page')
+        |> redirect(to: session_path(conn, :new))
+    end
+  end
+end
+```
+
 ### Creating Pheet Controller
 
 The controller is pretty simple. To make this app easy you'll only be aloud to create Pheets. This way we'll only need 3 actions `index/2`, `new/2`, and `create/2`.
@@ -634,8 +673,6 @@ index.html.eex
   <%= link "New pheet", to: pheet_path(@conn, :new), class: "btn btn-primary " %>
 </div>
 
-
-
 <div id="pheets-wrapper">
   <%= for pheet <- @pheets do %>
       <div class="pheet">
@@ -650,3 +687,5 @@ index.html.eex
 </div>
 
 ```
+
+Well there we have it. It wasn't so bad was it? Let me know what you think in the commments! Thank you so much for taking the time to read this and I hope you've learned something!
