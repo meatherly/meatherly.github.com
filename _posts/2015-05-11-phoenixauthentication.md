@@ -14,7 +14,7 @@ tags: [phoenix authentication comeonin plug]
 
 Ever wonder how hard it is to implement authentication with Phoenix or how hard it is to roll your own authentication in Phoenix? Well in this blog post we'll find out!
 
-We'll be making an app called Phitter. An where users can post their thoughts that are 255 characters in length for all to see. In order to do this we'll need 2 models: User and Pheets. We'll learn how to make a Plug for authentication.
+We'll be making an app called *Phitter* where users can post their thoughts that are 255 characters in length for all to see. In order to do this we'll need 2 models: `User` and `Pheets`. We'll learn how to make a **Plug** for authentication.
 
 Before I get started just wanted to let you guys in on a few things:
 
@@ -25,11 +25,11 @@ I want to thank all those who've helped me make this possible by helping me with
  * [crododile](https://github.com/crododile)
  * [jpiked](https://twitter.com/jpiked)
 
-I got my first pull request merged into Ecto!! https://github.com/elixir-lang/ecto/pull/597#issuecomment-102262215 Yay!
+My first pull request was merged into Ecto!! https://github.com/elixir-lang/ecto/pull/597#issuecomment-102262215 Yay!
 
-And lastly, If you didn't know my wife and I just got our referral for a little girl from South Korea. We're doing some fund raising to support our adoption so wanted to invite you guys to: Show off your smarts and support adoption! http://buff.ly/1Q0caW0
+And lastly, If you didn't know my wife and I just have just received our referral for a little girl from South Korea. We're doing some fund raising to support our adoption so wanted to invite you guys to show off your smarts and support adoption! http://buff.ly/1Q0caW0
 
-Just a heads up. This post is long because we're creating an app from scratch. If you would like to learn how to add Authentication to your existing app then read these sections of the post:
+Just a heads up. This post is long because we're creating an app from scratch. If you would like to learn how to add authentication to your existing app then read these sections of the post:
 
 * [Create User](#create-a-user-model) - only read this if you don't have a username and password field.
 * [Registration Controller](#registration-controller)
