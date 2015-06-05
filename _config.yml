@@ -15,7 +15,7 @@ redcarpet:
 # Themes are encouraged to use these universal variables
 # so be sure to set them if your theme uses them.
 #
-title : meatherly.github.com
+title : meatherly.github.io
 tagline: A place to put my thoughts
 author:
   name: Michael Eatherly
@@ -31,7 +31,7 @@ author:
 # Else if you are pushing to username.github.io, replace with your username.
 # Finally if you are pushing to a GitHub project page, include the project name at the end.
 #
-production_url : http://meatherly.github.com
+# production_url : http://meatherly.github.com
 
 # All Jekyll-Bootstrap specific configurations are namespaced into this hash
 #
@@ -84,7 +84,7 @@ JB:
   # Settings for comments helper
   # Set 'provider' to the comment provider you want to use.
   # Set 'provider' to false to turn commenting off globally.
-  #
+  
   comments :
     provider : disqus
     disqus :
@@ -93,7 +93,7 @@ JB:
   # Settings for analytics helper
   # Set 'provider' to the analytics provider you want to use.
   # Set 'provider' to false to turn analytics off globally.
-  #
+
   analytics :
     provider : google
     google :
