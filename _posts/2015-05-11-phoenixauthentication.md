@@ -167,7 +167,7 @@ end
 
 We'll implement the  `RegistrationController` step by step. Let's Go!
 
-First create a registrations controller to allow the user to create an account.
+First create a registration controller to allow the user to create an account.
 
 ``` elixir
 ## phitter/web/controllers/registration_controller.ex
@@ -453,7 +453,7 @@ last let's add our session template for the new action.
 <% end %>
 ```
 
-We also uncomment the session link in our registration form at `phitter/web/templates/registrations/new/html.eex` form.
+We also uncomment the session link in our registration form at `phitter/web/templates/registration/new/html.eex` form.
 
 What we have here is the `sign_in` function that will check if the user is nil or it will try to log in the user if the map is given from `Repo.get/2`. The `cond` condition looks odd but basically it's checking the password submitted by the user and if that is true it will log in. If that doesn't work then it will default the the `true ->` value and tell the person they can't login with that username and password combination.
 
