@@ -31,4 +31,6 @@ channel.join()
   .receive("error", reason => console.log(`Error joining channel: ${reason}`))
 ```
 
+To see how to use the Phoenix.JS library head over to http://www.phoenixframework.org/docs/channels
+
 That's about it. Simple right?
