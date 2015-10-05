@@ -105,6 +105,8 @@ $ mix phoenix.gen.model User users username encrypted_password
 
 Since we're not storing the `password` and `password_confirmation` fields we'll have to make them virtual attributes using Ecto. We'll also want to make sure we validate those fields. We'll need a custom validation since ecto doesn't have a `validates :confirmation` yet...but watch for my pull request because it'll add this feature to ecto :P
 
+*Update. You don't need the validate_confirmation/2 anymore since that has been added by my pull request. See comments below*
+
 ``` elixir
 defmodule Phitter.User do
   use Phitter.Web, :model
@@ -135,11 +137,11 @@ defmodule Phitter.User do
     |> validate_confirmation(:password)
   end
 
-  def validate_confirmation(changeset, field) do
-    value = get_field(changeset, field)
-    confirmation_value = get_field(changeset, :"#{field}_confirmation")
-    if value != confirmation_value, do: add_error(changeset, :"#{field}_confirmation", "does not match"), else: changeset
-  end
+  # def validate_confirmation(changeset, field) do
+  #   value = get_field(changeset, field)
+  #   confirmation_value = get_field(changeset, :"#{field}_confirmation")
+  #   if value != confirmation_value, do: add_error(changeset, :"#{field}_confirmation", "does not match"), else: changeset
+  # end
 end
 ```
 
@@ -286,7 +288,7 @@ defmodule Phitter.RegistrationController do
   def create(conn, %{"user" => user_params}) do
     changeset = User.changeset(%User{}, user_params)
     if changeset.valid? do
-      new_user = Password.generate_password_and_store(changeset)
+      new_user = Password.generate_password_and_store_user(changeset)
 
       conn
         |> put_flash(:info, "Successfully registered and logged in")
