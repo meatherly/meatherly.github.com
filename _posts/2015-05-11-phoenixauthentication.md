@@ -5,7 +5,7 @@ description: "Rolling in the deep with Authentication and Phoenix"
 category:
 tags: [phoenix authentication comeonin plug]
 ---
-{% include JB/setup %}
+
 
 
 *I've just posted this but I still need to proof read a lot. Thought you guys might want to see what I've been working on. Please don't count this against me :p*

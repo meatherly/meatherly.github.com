@@ -5,7 +5,7 @@ description: "Simple post on connecting Node app to your phoenix channels."
 category:
 tags: [js node phoenix]
 ---
-{% include JB/setup %}
+
 
 I've been working with a Raspi lately and needed to connect it to my Phoenix app. After talking with [chrismccord](https://github.com/chrismccord) he showed me it was easier than I thought. See below.
 

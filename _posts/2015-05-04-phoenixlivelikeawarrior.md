@@ -5,7 +5,7 @@ description: ""
 category:
 tags: [phoenix elixir]
 ---
-{% include JB/setup %}
+
 
 
 
@@ -66,7 +66,7 @@ Now you should be able to open your browser and visit http://localhost:4000
 
 Just like you would see in Rails. It's a simple welcome page. Yay!
 
-Okay now it's time for me just to show you the coolest "batteries included" feature about this framework. Open the `simple_phoenix_app/web/templates/page/index.html.eex` file in your editor. Then make sure you have the editor and browser pointed at http://localhost:4000 and it's visible. Now at the top of the page add a `h1` to the jumbotron div. like:  
+Okay now it's time for me just to show you the coolest "batteries included" feature about this framework. Open the `simple_phoenix_app/web/templates/page/index.html.eex` file in your editor. Then make sure you have the editor and browser pointed at http://localhost:4000 and it's visible. Now at the top of the page add a `h1` to the jumbotron div. like:
 
 ```html
 <div class="jumbotron">

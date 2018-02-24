@@ -5,7 +5,7 @@ description: "Standards, Tips, and Performance for testing your Rails app"
 category:
 tags: [rspec, rails, api]
 ---
-{% include JB/setup %}
+
 
 
 __Disclaimer:__ This is just my opinion on rails testing. It's no way a *"must follow guide for testing"* __Also this blog post is a work progress.__
@@ -15,7 +15,7 @@ A good rule of thumb for writing tests for your api is: You should test every th
 
 ##Things you should test when writing API tests
 ###The serializer/response body
-This way you will know exactly what the serializer is returning and you can be confident when you have to make changes to your models or serializers that it won’t break the api.  
+This way you will know exactly what the serializer is returning and you can be confident when you have to make changes to your models or serializers that it won’t break the api.
 
 At minimum you should be testing the keys. That way you know what keys you’re returning with the api.
 
@@ -44,10 +44,10 @@ If you want to test the serializer you can do something like this:
 
 These should go in the `spec/serializers` folder.
 
-    describe UserSerializer do  
+    describe UserSerializer do
       it "should return the right attributes for a user" do
         serializer = UserSerializer.new User.new(id: 1, first_name: 'first', last_name: 'last')
-        expect(serializer.to_json).to eql('{"user":{"id":1,"first_name":"first", "last_name":"last"}}')  
+        expect(serializer.to_json).to eql('{"user":{"id":1,"first_name":"first", "last_name":"last"}}')
       end
     end
 
@@ -62,7 +62,7 @@ The above can be harder to write and but it is more verbose. If you don't like t
       end
       it 'should have the correct attributes' do
         get :show, id: 1
-        json = JSON.parse(response.body)  
+        json = JSON.parse(response.body)
         expect{
           user.attributes.all? do |key|
             json.has_key(key)
