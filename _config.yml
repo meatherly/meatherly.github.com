@@ -23,23 +23,7 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://meatherly.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: meatherly
 github_username:  meatherly
-highlighter: rouge
-source: .
-destination: ./_site
-permalink: /:title
-paginate: 8
-paginate_path: /page:num/
-
-future: false
-
-# Default values
-defaults:
-  -
-    scope:
-      path: ""
-      type: "posts"
-    values:
-      layout: "post"
+highlighter: none
 
 disqus:
   shortname: meatherly
@@ -48,7 +32,7 @@ google_analytics: UA-48125163-1
 
 # Build settings
 markdown: kramdown
-# theme: minima
+theme: minima
 plugins:
   - jekyll-feed
   - jekyll-sitemap

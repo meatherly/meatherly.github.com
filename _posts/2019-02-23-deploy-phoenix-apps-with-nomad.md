@@ -29,14 +29,13 @@ We're going to build a __non production ready__ environment to see some possibil
 
 Let's start of with a job. I'll let Hashicorp explain that:
 
->>> A Job is a specification provided by users that declares a workload for Nomad. A Job is a form of desired state; the user is expressing that the job should be running, but not where it should be run. The responsibility of Nomad is to make sure the actual state matches the user desired state. A Job is composed of one or more task groups.
+> A Job is a specification provided by users that declares a workload for Nomad. A Job is a form of desired state; the user is expressing that the job should be running, but not where it should be run. The responsibility of Nomad is to make sure the actual state matches the user desired state. A Job is composed of one or more task groups.
 
 With that let's create a job for nginx to load balance our work across our Phoenix apps. But wait Phoenix has this built in it by using processes in it to handler a large influx of requests. Yes, you're right but trust me you're going to want to see what nomad can do with templates. It has a very similar to Elixir developers, supervisors. Nomad has that built into it. It can watch for changes on your services and do actions based on the changes. It uses [Consul]() for service discovery and then allows you to make templates on those services to config other things in your infrastructure.
 
 Let's take a look at the code for this:
 
-{% highlight raw %}
-{% raw %}
+``` hcl
 template {
   data = <<EOF
   events { worker_connections 1024; }
@@ -44,12 +43,14 @@ template {
   http {
     upstream hello_nomad {
       least_conn;
-      {{range service "hello-nomad"}}
+      {% raw %}{{range service "hello-nomad"}}
       server {{.Address}}:{{.Port}} weight=10 max_fails=3 fail_timeout=30s;
       {{else}}
       server 127.0.0.1:65535;
-      {{end}}
+      {{end}}{% endraw %}
     }
+
+
 
     server {
       listen 8080;
@@ -68,9 +69,8 @@ template {
   destination   = "new/default.conf"
   change_mode   = "restart"
 }
-{% endraw %}
-{% endhighlight %}
+```
 
 
 
-I'm using an inline template with some `{{}}` in it to tell Nomad to fill in for me from the data it gets from Consul. I'm saying for the service `hello-nomad` create a line like: `server 127.0.0.1:4000 weight=10 max_fails=3 fail_timeout=30s;` in the nginx upstream block. But if no services exist then fallback to `server 127.0.0.1:65535;` so that it just shows the infamous Bad gateway message. I'm also telling it where to place the config file with the `destination` variable and what the nomad should do to the task on change with the `change_mode` variable. Why is this cool? I can scale up or down as many instances of my application as I want and Nomad will change the nginx config file for me and reload it to update the changes. It's like a self healing infrastructure.
+I'm using an inline template with some `{% raw %}{{ }}{% endraw %}` in it to tell Nomad to fill in for me from the data it gets from Consul. I'm saying for the service `hello-nomad` create a line like: `server 127.0.0.1:4000 weight=10 max_fails=3 fail_timeout=30s;` in the nginx upstream block. But if no services exist then fallback to `server 127.0.0.1:65535;` so that it just shows the infamous Bad gateway message. I'm also telling it where to place the config file with the `destination` variable and what the nomad should do to the task on change with the `change_mode` variable. Why is this cool? I can scale up or down as many instances of my application as I want and Nomad will change the nginx config file for me and reload it to update the changes. It's like a self healing infrastructure.
