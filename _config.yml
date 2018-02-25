@@ -24,7 +24,7 @@ url: "https://meatherly.github.io" # the base hostname & protocol for your site,
 twitter_username: meatherly
 github_username:  meatherly
 highlighter: none
-
+repository: meatherly/meatherly.github.com
 disqus:
   shortname: meatherly
 
