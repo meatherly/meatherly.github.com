@@ -23,9 +23,10 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://meatherly.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: meatherly
 github_username:  meatherly
-highlighter: none
+highlighter: rouge
 repository: meatherly/meatherly.github.com
 permalink: pretty
+future: false
 
 disqus:
   shortname: meatherly
