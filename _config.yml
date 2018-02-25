@@ -25,6 +25,8 @@ twitter_username: meatherly
 github_username:  meatherly
 highlighter: none
 repository: meatherly/meatherly.github.com
+permalink: pretty
+
 disqus:
   shortname: meatherly
 
