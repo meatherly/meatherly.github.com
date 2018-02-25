@@ -15,7 +15,7 @@
 # in the templates via {{ site.myvariable }}.
 
 author: Michael Eatherly
-title: meatherly.github.io
+title: meatherly
 email: meatherly@gmail.com
 description: >- # this means to ignore newlines until "baseurl:"
   A place to store my thoughts
@@ -32,7 +32,7 @@ google_analytics: UA-48125163-1
 
 # Build settings
 markdown: kramdown
-theme: minima
+theme: jekyll-swiss
 plugins:
   - jekyll-feed
   - jekyll-sitemap
