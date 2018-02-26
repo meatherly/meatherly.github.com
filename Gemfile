@@ -19,6 +19,7 @@ group :jekyll_plugins do
   gem "jekyll-compose"
   gem "jekyll-paginate"
   gem "jekyll-sitemap"
+  gem 'jemoji'
 end
 
 gem "tzinfo-data"
